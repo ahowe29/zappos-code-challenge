@@ -1,0 +1,70 @@
+.box h2 {background:#2e3842;color:white;padding:10px;top:0px;margin:0px;}
+.box p {color:#333;padding:10px;}
+.box a { color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */}
+.box {
+font-family: 'Open Sans', sans-serif;
+		font-size: 0.8em;
+		letter-spacing: 3px;
+		margin: 0px;
+
+		padding:0px;
+    -moz-border-radius-topright:5px;
+    -moz-border-radius-topleft:5px;
+    -webkit-border-top-right-radius:5px;
+    -webkit-border-top-left-radius:5px;
+top:0px;
+a {
+  color: inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
+    
+}
+body{
+    bottom: 0px;
+    top:0px;
+    margin:0;
+    padding:0;
+
+}
+
+.constrain {
+height:556px;
+}
+
+
+.googlefont h2{padding-left:10px;padding-bottom:0px;padding-top:7px;margin:10px;}
+.googlefont p{padding-left:10px;padding-bottom:4px;padding-top:0px;margin:10px;}
+.googlefont {
+  font-family: 'Bangers', cursive;
+letter-spacing:1px;
+padding:0px;
+
+  
+}
+/* spotify*/
+.new h2{padding:0px;margin:0px;bottom:0px;}
+.new {
+background-color: #23cf5f;
+	
+	height: 80px;
+	border-color: #23cf5f;
+	padding-top: 4px;
+	padding-bottom: 4px;
+	border-top: 1px;
+	border-bottom: 1px;
+ position:fixed;
+   left:0px;
+   bottom:0px;
+   
+   width:100%;
+  
+}
+.shift {
+
+margin-left:.5%;
+padding-left: .5%;
+margin-bottom: 2.7%;
+padding-bottom: 2.7%;
+}
+

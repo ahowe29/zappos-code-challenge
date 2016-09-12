@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://www.alliehowe.tech/ZapposCodeChallenge/lamamap.css" />
+     <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,800,800italic" rel="stylesheet"/>
+     <link href="https://fonts.googleapis.com/css?family=Francois+One" rel="stylesheet">
+     <link rel="shortcut icon" type="image/png" href="https://www.alliehowe.tech/ZapposCodeChallenge/map.png" />
+     <script src="./vue.js"></script>
+    <title>Llama Locations</title>
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #map {
+        height: 50%;
+        width: 100%;
+        
+        margin-bottom: 1%;
+
+      }
+    </style>
+  </head>
+  <body>
+  <div class="box">
+    <h2><a href="https://www.alliehowe.tech/ZapposCodeChallenge/challengehome.html">Zappos Code Challenge</a></h2>
+    </div>
+    </body>
+    
+    <div id="map" class="shiftmap"></div>
+    <script>
+      var map;
+      // This example creates circles on the map, representing populations in North
+      // America.
+
+      // First, create an object containing LatLng and population for each city.
+      var citymap = {
+        southamerica: {
+          center: {lat: -13.049692, lng:   -72.034785}, 
+          population: 80000000
+        },
+        centralamerica: {
+          center: {lat: 19.436660, lng: -99.132636}, 
+          population: 90000000
+        },
+        northamerica: {
+          center: {lat: 39.086419, lng: -109.010272},
+          population: 50000000
+        },
+        eurolama: {
+          center: {lat: 41.848722, lng: -1.668994}, 
+          population: 70000000
+        }
+      };
+
+      function initMap() {
+        // Create the map.
+        map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: {lat: 37.090, lng: -95.712},
+          mapTypeId: 'terrain'
+        });
+
+        // Construct the circle for each value in citymap.
+        // Note: We scale the area of the circle based on the population.
+        for (var city in citymap) {
+          // Add the circle for this city to the map.
+          var cityCircle = new google.maps.Circle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35,
+            map: map,
+            center: citymap[city].center,
+            radius: Math.sqrt(citymap[city].population) * 100
+          });
+        }
+      }
+    </script>
+    
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9LCuJTpEseiycognSa-qbPcpVmbQ7UCk&callback=initMap">
+    </script>
+
+    
+
+    <!-- grid vue.js -->
+<script type="text/x-template" id="grid-template">
+  <table>
+    <thead>
+      <tr>
+        <th v-for="key in columns"
+          @click="sortBy(key)"
+          :class="{active: sortKey == key}">
+          {{key | capitalize}}
+          <span class="arrow"
+            :class="sortOrders[key] > 0 ? 'asc' : 'dsc'">
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="
+        entry in data
+        | filterBy filterKey
+        | orderBy sortKey sortOrders[sortKey]">
+        <td v-for="key in columns">
+          {{entry[key]}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</script>
+
+<!-- demo root element -->
+<div id="demo">
+  <form id="search">
+    Search <input name="query" v-model="searchQuery">
+  </form>
+  <demo-grid
+    :data="gridData"
+    :columns="gridColumns"
+    :filter-key="searchQuery">
+  </demo-grid>
+</div>
+
+<script>
+// register the grid component
+Vue.component('demo-grid', {
+  template: '#grid-template',
+  props: {
+    data: Array,
+    columns: Array,
+    filterKey: String
+  },
+  data: function () {
+    var sortOrders = {}
+    this.columns.forEach(function (key) {
+      sortOrders[key] = 1
+    })
+    return {
+      sortKey: '',
+      sortOrders: sortOrders
+    }
+  },
+  methods: {
+    sortBy: function (key) {
+      this.sortKey = key
+      this.sortOrders[key] = this.sortOrders[key] * -1
+    }
+  }
+})
+
+// bootstrap the demo
+var demo = new Vue({
+  el: '#demo',
+  data: {
+    searchQuery: '',
+    gridColumns: ['name', 'Population'],
+    gridData: [
+      { name: 'North American Llama', Population: 500000 },
+      { name: 'Central American Llama', Population: 9000000 },
+      { name: 'South American Llama', Population: 8000000 },
+      { name: 'European Llama', Population: 7000000 }
+    ]
+  }
+})
+</script>
+<script type="text/javascript">
+function mapPan(point) {
+    var latLng = new google.maps.LatLng(point['lat'], point['lng']);
+    map.panTo(latLng);
+}
+</script>
+
+<!-- add llama pics -->
+<div>
+    <a href="#"><img src="./pretentiouslama.jpg" class="img1" onclick="mapPan(citymap['northamerica']['center'])" /></a>
+    <p style="right:35%;bottom:28%;position:absolute;font-family: 'Francois One', sans-serif; font-size: 25px;">
+    North American Llama
+    </p>
+    
+    <a href="#"><img src="./fluffballlama.jpg" class="img2" onclick="mapPan(citymap['centralamerica']['center'])"/></a>
+     <p style="right:15%;bottom:28%;position:absolute;font-family: 'Francois One', sans-serif; font-size: 25px;">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Central <br> American Llama
+    </p>
+    <a href="#"><img src="./happylama.jpg" class="img3" onclick="mapPan(citymap['southamerica']['center'])" /></a>
+    <p style="right:36%;bottom:7%;position:absolute;font-family: 'Francois One', sans-serif; font-size: 25px;">
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; South <br> American Llama
+    </p>
+    <a href="#"><img src="./eurolama.jpg" class="img4" onclick="mapPan(citymap['eurolama']['center'])" /></a>
+    <p style="right:15%;bottom:8%;position:absolute;font-family: 'Francois One', sans-serif; font-size: 25px;">
+     European Llama
+    </p>
+    </div>
+  </body>
+</html>

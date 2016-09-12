@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kuzco Escape!</title>
+    <link href="https://fonts.googleapis.com/css?family=Bangers" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.alliehowe.tech/ZapposCodeChallenge/maze.css" />
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,800,800italic" rel="stylesheet">
+    <link rel="shortcut icon" type="image/png" href="http://www.alliehowe.tech/ZapposCodeChallenge/kuzco.png" />
+</head>
+<body>
+<div class="box">
+    <h2><a href="https://www.alliehowe.tech/ZapposCodeChallenge/challengehome.html">Zappos Code Challenge</a></h2>
+    </div>
+    
+<div class="googlefont">
+    <h2>Help Emperor Kuzco Escape the Palace and find Pacha!</h2>
+    <p>
+        But be careful! Watch out for Yzma and her guards!
+    </p>
+    </div>
+    <div>
+    <canvas id="mazecanvas" width="556" height="556" class="shift">Can't load the maze game, because your browser doesn't support HTML5.</canvas>
+    <noscript>JavaScript is not enabled. To play the game, you should enable it.</noscript>
+    <script>
+        // Maze game created by ProgramFOX; http://www.codeproject.com/Members/ProgramFOX
+        // Licensed under CPOL: http://www.codeproject.com/info/cpol10.aspx
+        //Allie added Yzma and guard functionality and key along with CSS and styling
+
+        // 425 (X), 3 (Y) RECTANGLE
+        // 542 (center X), 122 (center Y) CIRCLE
+        var canvas = document.getElementById("mazecanvas");
+        var context = canvas.getContext("2d");
+        var currRectX = 425;
+        var currRectY = 3;
+        var mazeWidth = 556;
+        var mazeHeight = 556;
+        var intervalVar;
+        function drawMazeAndRectangle(rectX, rectY) {
+            makeWhite(0, 0, canvas.width, canvas.height);
+            var mazeImg = new Image();
+            mazeImg.onload = function () {
+                context.drawImage(mazeImg, 0, 0);
+                drawRectangle(rectX, rectY, "#0000FF");
+                context.beginPath();
+                context.arc(542, 122, 7, 0, 2 * Math.PI, false);
+               context.fillStyle = '#00FF00';
+                context.closePath();
+                
+                //yzma's
+                context.fill();
+                context.beginPath();
+                context.arc(410, 295, 7, 0, 2 * Math.PI, false);
+                context.arc(120, 235, 7, 0, 2 * Math.PI, false)
+    		context.fill();
+    		context.fillStyle = "#551A8B";
+    		context.fill();
+    		context.closePath();
+    		
+    		context.fill();
+                context.beginPath();
+                context.arc(500, 500, 7, 0, 2 * Math.PI, false);
+                context.arc(220, 475, 7, 0, 2 * Math.PI, false)
+    		context.fill();
+    		context.fillStyle = "#551A8B";
+    		context.fill();
+    		context.closePath();
+    		
+    		context.fill();
+                context.beginPath();
+                context.arc(38, 59, 7, 0, 2 * Math.PI, false);
+                context.arc(260, 100, 7, 0, 2 * Math.PI, false)
+    		context.fill();
+    		context.fillStyle = "#551A8B";
+    		context.fill();
+    		context.closePath();
+    		
+    		
+            };
+            mazeImg.src = "maze.gif";
+        }
+        function drawRectangle(x, y, style) {
+            makeWhite(currRectX, currRectY, 15, 15);
+            currRectX = x;
+            currRectY = y;
+            context.beginPath();
+            context.rect(x, y, 15, 15);
+            context.closePath();
+            context.fillStyle = style;
+            context.fill();
+        }
+        function moveRect(e) {
+            var newX;
+            var newY;
+            var movingAllowed;
+            e = e || window.event;
+            switch (e.keyCode) {
+                case 38:   // arrow up key
+                case 87: // W key
+                    newX = currRectX;
+                    newY = currRectY - 3;
+                    break;
+                case 37: // arrow left key
+                case 65: // A key
+                    newX = currRectX - 3;
+                    newY = currRectY;
+                    break;
+                case 40: // arrow down key
+                case 83: // S key
+                    newX = currRectX;
+                    newY = currRectY + 3;
+                    break;
+                case 39: // arrow right key
+                case 68: // D key
+                    newX = currRectX + 3;
+                    newY = currRectY;
+                    break;
+                default: return;
+            }
+            movingAllowed = canMoveTo(newX, newY);
+            if (movingAllowed === 1) {      // 1 means 'the rectangle can move'
+                drawRectangle(newX, newY, "#0000FF");
+                currRectX = newX;
+                currRectY = newY;
+            }
+             if (movingAllowed === 3) {      // 3 means ezma hit
+                clearInterval(intervalVar);
+                makeWhite(0, 0, canvas.width, canvas.height);
+                context.font = "40px 'Bangers', cursive";
+                context.fillStyle = "#551A8B";
+                context.textAlign = "center";
+                context.textBaseline = "middle";
+                context.fillText("Captured by Yzma!", canvas.width / 2, canvas.height / 2);
+                window.removeEventListener("keydown", moveRect, true);
+            }
+            else if (movingAllowed === 2) { // 2 means 'the rectangle reached the end point'
+                clearInterval(intervalVar);
+                makeWhite(0, 0, canvas.width, canvas.height);
+                context.font = "40px 'Bangers', cursive";
+                context.fillStyle = "blue";
+                context.textAlign = "center";
+                context.textBaseline = "middle";
+                context.fillText("Congratulations you found Pacha!", canvas.width / 2, canvas.height / 2);
+                window.removeEventListener("keydown", moveRect, true);
+            }
+        }
+        function canMoveTo(destX, destY) {
+        if (destX === 410 && destY === 190) {
+         clearInterval(intervalVar);
+                makeWhite(0, 0, canvas.width, canvas.height);
+                context.font = "40px 'Bangers', cursive";
+                context.fillStyle = "blue";
+                context.textAlign = "center"; //
+                context.textBaseline = "middle";
+                context.fillText("Captured!", canvas.width / 2, canvas.height / 2);
+                window.removeEventListener("keydown", moveRect, true);
+        }
+            var imgData = context.getImageData(destX, destY, 15, 15);
+            var data = imgData.data;
+            var canMove = 1; // 1 means: the rectangle can move
+            if (destX >= 0 && destX <= mazeWidth - 15 && destY >= 0 && destY <= mazeHeight - 15) {
+                for (var i = 0; i < 4 * 15 * 15; i += 4) {
+                    if (data[i] === 0 && data[i + 1] === 0 && data[i + 2] === 0) { // black
+                        canMove = 0; // 0 means: the rectangle can't move
+                        break;
+                    }
+                    if (data[i] === 85 && data[i + 1] === 26 && data[i + 2] === 139) { // purple
+                        canMove = 3; // 3 means: the rectangle hit an ezma
+                        break;
+                    }
+                    if (data[i] === 0 && data[i + 1] === 255 && data[i + 2] === 0) { // #00FF00
+                        canMove = 2; // 2 means: the end point is reached
+                        break;
+                    }
+                }
+            }
+            else {
+                canMove = 0;
+            }
+            return canMove;
+        }
+        function createTimer(seconds) {
+            intervalVar = setInterval(function () {
+                makeWhite(mazeWidth, 0, canvas.width - mazeWidth, canvas.height);
+                if (seconds === 0) {
+                    clearInterval(intervalVar);
+                    window.removeEventListener("keydown", moveRect, true);
+                    makeWhite(0, 0, canvas.width, canvas.height);
+                    context.font = "40px 'Bangers', cursive";
+                    context.fillStyle = "red";
+                    context.textAlign = "center";
+                    context.textBaseline = "middle";
+                    context.fillText("Time's up!", canvas.width / 2, canvas.height / 2);
+                    return;
+                }
+                context.font = "20px Arial";
+                if (seconds <= 10 && seconds > 5) {
+                    context.fillStyle = "orangered";
+                }
+                else if (seconds <= 5) {
+                    context.fillStyle = "red";
+                }
+                else {
+                    context.fillStyle = "green";
+                }
+                context.textAlign = "center";
+                context.textBaseline = "middle";
+                var minutes = Math.floor(seconds / 60);
+                var secondsToShow = (seconds - minutes * 60).toString();
+                if (secondsToShow.length === 1) {
+                    secondsToShow = "0" + secondsToShow; // if the number of seconds is '5' for example, make sure that it is shown as '05'
+                }
+                context.fillText(minutes.toString() + ":" + secondsToShow, mazeWidth + 30, canvas.height / 2);
+                seconds--;
+            }, 1000);
+        }
+        function makeWhite(x, y, w, h) {
+            context.beginPath();
+            context.rect(x, y, w, h);
+            context.closePath();
+            context.fillStyle = "white";
+            context.fill();
+        }
+        drawMazeAndRectangle(425, 3);
+        window.addEventListener("keydown", moveRect, true);
+        createTimer(150); // 2.5 minutes
+    </script>
+    
+    <script>
+    window.addEventListener("keydown", function(e) {
+    // space and arrow keys
+    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
+    }, false);
+    </script>
+    </div>
+    <div>
+    <img src="https://www.alliehowe.tech/key.png" style="position: absolute;right:0;top:30%;height:30%;width:50%;" />
+    </div>
+    
+    <div class="new" >
+						<header>
+							<h2><iframe src="https://embed.spotify.com/?uri=spotify:track:0is3TXic9WVC1IONbQnl9b" width=100% height="80" frameborder="0" allowtransparency="true"></iframe></h2>
+
+							
+						</header>
+
+						
+					</div>
+</body>
+</html>
